@@ -1,0 +1,103 @@
+<html>
+    <head>
+        {% if title %}
+        <title>{{ title }}</title>
+        {% else %}
+        <title>No Title</title>
+        {% endif %}
+        <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+        <meta name="viewport" content = "width=device-width, initial-scale=1.0">
+    </head>
+    <body>
+        <div class="row">
+            <div class="col-sm-6 col-sm-offset-3">
+                <div class="well well-lg">
+                    <div>
+                        {% with messages = get_flashed_messages(with_categories=true) %}
+                            {% if messages %}
+                                {% for category, message in messages %}
+                                    {% if category == 'message' %}
+                                        <div class="alert alert-warning" role="alert">
+                                    {% else %}
+                                        <div class="alert alert-{{ category }}" role="alert">
+                                    {% endif %}
+                                            {{ message }}
+                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                        </div>
+                                {% endfor %}
+                            {% endif %}
+                        {% endwith %}
+                    </div>
+
+                    <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <h3 class="panel-title">{{ artist }}</h3>
+                            </div>
+                            <div class="panel-body">{{ songTitle }}</div>
+                    </div>
+                
+                    <img src="{{ imgURL }}" height=200 width=200 class="img-responsive img-rounded center-block"></img><br>
+                    <form action="" method="post" role="form">
+                        {{form.csrf}}
+                        <div class="text-center">
+                            <div class="btn-group" role="group" aria-label="...">
+                                <button type="submit" name="btn" class="btn btn-default" value="play">
+                                    <span class="glyphicon glyphicon-pause" aria-hidden="true"></span>
+                                </button>
+                                <button type="submit" name="btn" class="btn btn-default" value="next">
+                                    <span class="glyphicon glyphicon-step-forward" aria-hidden="true"></span>
+                                </button>
+                                <button type="submit" name="btn" class="btn btn-default" value="like">
+                                    {% if loved %}
+                                    <span class="glyphicon glyphicon-heart" style="color:red;" aria-hidden="true"></span>
+                                    {% else %}
+                                    <span class="glyphicon glyphicon-thumbs-up" aria-hidden="true"></span>
+                                    {% endif %}
+                                </button>
+                                <button type="submit" name="btn" class="btn btn-default" value="dislike">
+                                    <span class="glyphicon glyphicon-thumbs-down" aria-hidden="true"></span>
+                                </button>
+                            </div>
+                        
+                            </div><br>
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <span class="label label-default">Recently Played</span>
+                                </div>
+                                <div class="panel panel-body">
+                            <div class="media-list">
+                                {% if history %}
+                                    {% for song in history[::-1] %}
+                            <li class="media">
+                                <div class="media-left">
+                                    <a href="#">
+                                        <img class="media-object img-rounded" src="{{ song['imgURL'] }}" height=64 width=64 alt="">
+                                    </a>
+                                </div>
+                                <div class="media-body">
+                                    <h4 class="media-heading">{{ song['artist'] }}</h4>
+                                    <p> {{ song['title'] }}
+                                        {% if song['loved'] %}
+                                            <span class="glyphicon glyphicon-heart" style="color:red;" aria-hidden="true"></span>
+                                        {% endif %}
+                                    </p>
+                                </div>
+                                    {% endfor %}
+                                {% endif %}
+                            </li>
+                            </div></div>
+                        </div>
+                    </div>
+            </form>
+        </div>
+    </body>
+
+    <script type="text/javascript">
+        setTimeout(function () { 
+            location = '';
+        }, 40 * 1000);
+    </script>
+</html>
